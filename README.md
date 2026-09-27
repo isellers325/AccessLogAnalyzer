@@ -20,14 +20,26 @@ A full-stack brute-force login detection tool. A Python/Flask backend parses log
 
 ## Project Structure
 
+AccessLogAnalyzer/
+├── Index.html # Frontend structure
+├── Style.css # Styling
+├── Script1.js # Frontend logic (fetches from the API)
+├── README.md
+├── .gitignore
+└── Backend/
+├── app.py # Flask server, log parsing, and time-window detection
+├── generate_logs.py # Synthetic log data generator
+└── logs.txt # Generated log data (ip,user,status,timestamp per line)
+
 
 ## How It Works
 
-1. `app.py` reads `logs.txt` and parses each line into a structured record
-2. It counts failed login attempts per IP address
-3. Any IP with more than 2 failures is flagged
-4. The `/api/flagged` route serves these flagged IPs as JSON
-5. The frontend calls this API on page load and displays the results
+1. `generate_logs.py` creates a realistic mix of normal and attacker traffic, writing it to `logs.txt`
+2. `app.py` reads `logs.txt` and parses each line into a structured record, including a timestamp
+3. For each IP, it groups all failed-login timestamps together
+4. Any IP with 3+ failures occurring within a 10-minute window is flagged as a likely brute-force attempt
+5. The `/api/flagged` route serves these flagged IPs as JSON
+6. The frontend calls this API on page load and displays the results
 
 ## Running Locally
 
@@ -44,7 +56,6 @@ Open `Index.html` in your browser (or use the VS Code Live Server extension). Ma
 
 ## Future Improvements
 
-- Adjustable failure threshold (currently hardcoded at 3)
-- Support for larger, more realistic log datasets
+- Adjustable failure threshold and time window (currently hardcoded at 3 failures / 10 minutes)
 - Persistent storage (database instead of a flat file)
-- Timestamp-based analysis (e.g. failures within a time window)
+- A route returning all logs, not just flagged results, for full activity review
