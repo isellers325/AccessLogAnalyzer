@@ -4,11 +4,14 @@ A full-stack brute-force login detection tool. A Python/Flask backend parses log
 
 ## Features
 
-- Parses raw login attempt logs (IP, username, status) from a text file
-- Flags any IP address with more than 2 failed login attempts, simulating brute-force attack detection
+- Parses raw login attempt logs (IP, username, status, timestamp) from a text file
+- Includes a synthetic data generator (`generate_logs.py`) that creates realistic normal traffic and simulated brute-force attack bursts using randomized, weighted data
+- Flags IPs with 3+ failed login attempts within a 10-minute window, using time-based burst detection rather than simple lifetime counts — closer to real-world brute-force detection
 - Exposes flagged results through a REST API endpoint (`/api/flagged`)
 - Frontend dynamically fetches and renders flagged IPs with no page reload
-- Dark, basketball-arena-inspired UI with a "BLOCKED 🏀" stamp effect on flagged entries
+- Basketball-arena-themed UI with a "BLOCKED 🏀" stamp effect on flagged entries
+
+
 
 ## Tech Stack
 
